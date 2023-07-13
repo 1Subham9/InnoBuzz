@@ -3,13 +3,12 @@ package com.amtron.innobuzz.fragment
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.amtron.innobuzz.R
 import com.amtron.innobuzz.adapter.PostAdapter
 import com.amtron.innobuzz.api.PostService
 import com.amtron.innobuzz.api.RetrofitHelper
@@ -17,6 +16,7 @@ import com.amtron.innobuzz.database.PostDatabase
 import com.amtron.innobuzz.databinding.FragmentSelectBinding
 import com.amtron.innobuzz.helper.Common
 import com.amtron.innobuzz.helper.Common.Companion.data
+import com.amtron.innobuzz.helper.Common.Companion.position
 import com.amtron.innobuzz.model.Post
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -36,14 +36,13 @@ class SelectFragment : Fragment(), PostAdapter.ItemClickInterface {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentSelectBinding.inflate(inflater, container, false)
 
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         adapter = PostAdapter(this)
         binding.recycler.adapter = adapter
-
 
 
         val instance = RetrofitHelper.getInstance().create(PostService::class.java)
@@ -55,10 +54,13 @@ class SelectFragment : Fragment(), PostAdapter.ItemClickInterface {
 
                 if (response.isSuccessful) {
 
-                    if(response.body()!=null){
-                        data = Gson().fromJson(response.body(), object : TypeToken<List<Post>>() {}.type)
+                    if (response.body() != null) {
+                        data = Gson().fromJson(
+                            response.body(),
+                            object : TypeToken<List<Post>>() {}.type
+                        )
 
-                        Log.d(TAG, "Data ${Common.data}")
+                        Log.d(TAG, "Data $data")
 
                         GlobalScope.launch {
                             database.addPosts(data)
@@ -86,8 +88,10 @@ class SelectFragment : Fragment(), PostAdapter.ItemClickInterface {
         return binding.root
     }
 
-    override fun getPost(position: Int) {
+    override fun getPost(index: Int) {
 
+        position = index
+        Common.viewPage.currentItem = 1
     }
 
 

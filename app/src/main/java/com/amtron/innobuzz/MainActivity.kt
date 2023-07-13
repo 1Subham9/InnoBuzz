@@ -1,6 +1,7 @@
 package com.amtron.innobuzz
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -17,6 +18,8 @@ import com.amtron.innobuzz.databinding.ActivityMainBinding
 import com.amtron.innobuzz.fragment.SelectFragment
 import com.amtron.innobuzz.fragment.ShowFragment
 import com.amtron.innobuzz.helper.Common
+import com.amtron.innobuzz.helper.Common.Companion.data
+import com.amtron.innobuzz.helper.Common.Companion.viewPage
 import com.amtron.innobuzz.model.Post
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
@@ -35,18 +38,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var messageDialog : AlertDialog
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
-
-
-
-        val fragmentList = arrayListOf<Fragment>(
+        val fragmentList = arrayListOf(
            SelectFragment(),ShowFragment()
         )
 
@@ -58,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             fragmentList, this.supportFragmentManager, lifecycle
         )
 
-        val viewPage = findViewById<ViewPager2>(R.id.viewPager)
+        viewPage = findViewById<ViewPager2>(R.id.viewPager)
 
         viewPage.adapter = adapter
 
@@ -132,9 +130,8 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(callback)
 
-
-
-
-
     }
+
+
+
 }
