@@ -1,8 +1,6 @@
 package com.amtron.innobuzz.fragment
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +42,7 @@ class SelectFragment : Fragment(), PostAdapter.ItemClickInterface {
         adapter = PostAdapter(this)
         binding.recycler.adapter = adapter
 
+        position = -1
 
         val instance = RetrofitHelper.getInstance().create(PostService::class.java)
         val database = PostDatabase.getDataBase(requireContext().applicationContext).postDao()
@@ -55,20 +54,19 @@ class SelectFragment : Fragment(), PostAdapter.ItemClickInterface {
                 if (response.isSuccessful) {
 
                     if (response.body() != null) {
-                        data = Gson().fromJson(
+                        val result : List<Post> = Gson().fromJson(
                             response.body(),
                             object : TypeToken<List<Post>>() {}.type
                         )
 
-                        Log.d(TAG, "Data $data")
 
                         GlobalScope.launch {
-                            database.addPosts(data)
+                            database.addPosts(result)
                             data = database.getPosts()
 
                         }
 
-                        adapter.updateList(data)
+                        adapter.updateList(result)
 
                     }
 
@@ -88,9 +86,9 @@ class SelectFragment : Fragment(), PostAdapter.ItemClickInterface {
         return binding.root
     }
 
-    override fun getPost(index: Int) {
+    override fun getPost(position: Int) {
 
-        position = index
+        Common.position = position
         Common.viewPage.currentItem = 1
     }
 

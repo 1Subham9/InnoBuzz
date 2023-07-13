@@ -2,6 +2,7 @@ package com.amtron.innobuzz.helper
 
 import androidx.viewpager2.widget.ViewPager2
 import com.amtron.innobuzz.model.Post
+import java.text.FieldPosition
 import kotlin.properties.Delegates
 
 class Common {
