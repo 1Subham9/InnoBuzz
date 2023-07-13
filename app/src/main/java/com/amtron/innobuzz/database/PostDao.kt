@@ -13,5 +13,5 @@ interface PostDao {
     suspend fun addPosts(posts : List<Post>)
 
     @Query("SELECT * FROM post")
-    suspend fun getPosts(posts : List<Post>)
+    suspend fun getPosts() : List<Post>
 }
