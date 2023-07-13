@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-                TODO("Not yet implemented")
+                Toast.makeText(this@MainActivity, "Data Received", Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
