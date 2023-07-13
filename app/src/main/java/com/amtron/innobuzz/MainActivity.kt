@@ -1,18 +1,18 @@
 package com.amtron.innobuzz
 
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.amtron.innobuzz.api.PostService
 import com.amtron.innobuzz.api.RetrofitHelper
 import com.amtron.innobuzz.database.PostDatabase
 import com.amtron.innobuzz.databinding.ActivityMainBinding
+import com.amtron.innobuzz.fragment.SelectFragment
+import com.amtron.innobuzz.fragment.ShowFragment
 import com.amtron.innobuzz.model.Post
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -33,16 +33,28 @@ class MainActivity : AppCompatActivity() {
         val database = PostDatabase.getDataBase(applicationContext).postDao()
 
 
-        instance.getPost().enqueue(object: Callback<JsonArray>{
+        val fragmentList = arrayListOf<Fragment>(
+           SelectFragment(),ShowFragment()
+        )
+
+
+        instance.getPost().enqueue(object : Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
 
 
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
 
-                    val data : List<Post> = Gson().fromJson(response.body(), object : TypeToken<List<Post>>()  {}.type)
+                    val data: List<Post> =
+                        Gson().fromJson(response.body(), object : TypeToken<List<Post>>() {}.type)
 
                     GlobalScope.launch {
+
                         database.addPosts(data)
+
+
+
+
+
                     }
                 }
 
@@ -55,10 +67,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-
-
-
 
 
     }
