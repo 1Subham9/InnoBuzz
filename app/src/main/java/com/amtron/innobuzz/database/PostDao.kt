@@ -10,8 +10,8 @@ import com.amtron.innobuzz.model.Post
 interface PostDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addPosts(posts : List<Post>)
+    fun addPosts(posts : List<Post>)
 
     @Query("SELECT * FROM post")
-    suspend fun getPosts() : List<Post>
+    fun getPosts() : List<Post>
 }

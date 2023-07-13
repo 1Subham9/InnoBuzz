@@ -1,6 +1,8 @@
 package com.amtron.innobuzz
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var messageDialog : AlertDialog
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,6 +41,36 @@ class MainActivity : AppCompatActivity() {
 
         val instance = RetrofitHelper.getInstance().create(PostService::class.java)
         val database = PostDatabase.getDataBase(applicationContext).postDao()
+
+
+        instance.getPost().enqueue(object : Callback<JsonArray> {
+            override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
+
+                if (response.isSuccessful) {
+
+                    if(response.body()!=null){
+                        val data: List<Post> =
+                            Gson().fromJson(response.body(), object : TypeToken<List<Post>>() {}.type)
+
+                        Log.d(TAG, "Data $data")
+
+                        GlobalScope.launch {
+                            database.addPosts(data)
+                        }
+                    }
+
+
+                }
+
+            }
+
+            override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+
+                Toast.makeText(this@MainActivity, "Network Error", Toast.LENGTH_SHORT).show()
+
+            }
+
+        })
 
 
         val fragmentList = arrayListOf<Fragment>(
@@ -129,35 +163,7 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(callback)
 
 
-        instance.getPost().enqueue(object : Callback<JsonArray> {
-            override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
 
-
-                if (response.isSuccessful) {
-
-                    val data: List<Post> =
-                        Gson().fromJson(response.body(), object : TypeToken<List<Post>>() {}.type)
-
-                    GlobalScope.launch {
-
-                        database.addPosts(data)
-
-
-
-
-
-                    }
-                }
-
-            }
-
-            override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-
-                Toast.makeText(this@MainActivity, "Network Error", Toast.LENGTH_SHORT).show()
-
-            }
-
-        })
 
 
     }
