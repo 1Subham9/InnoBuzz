@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                     0 -> bottomNav.selectedItemId = R.id.posts
                     1 -> bottomNav.selectedItemId = R.id.info
 
-
                 }
 
                 super.onPageSelected(position)
@@ -101,8 +100,6 @@ class MainActivity : AppCompatActivity() {
                     }
                     else -> {
 
-
-
                         val builder = AlertDialog.Builder(this@MainActivity)
 
                         builder.setTitle("EXIT")
@@ -122,8 +119,6 @@ class MainActivity : AppCompatActivity() {
                         // Set other dialog properties
                         messageDialog.setCancelable(false)
                         messageDialog.show()
-
-
 
                     }
                 }

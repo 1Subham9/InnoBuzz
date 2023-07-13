@@ -10,9 +10,9 @@ import androidx.room.PrimaryKey
 data class Post(
 
 
-    @ColumnInfo(name = "body") val body: String,
+    @ColumnInfo(name = "body") val body: String?=null,
     @PrimaryKey(autoGenerate = false)
-@ColumnInfo(name = "that") val that: String,
-@ColumnInfo(name = "title") val title: String,
-@ColumnInfo(name = "userId") val userId: Int
+@ColumnInfo(name = "that") val that: String?=null,
+@ColumnInfo(name = "title") val title: String?=null,
+@ColumnInfo(name = "userId") val userId: Int?=null
 )
